@@ -14,8 +14,8 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-  backend:
-    build: ./backend
+  app:
+    build: .
     container_name: node_app
     restart: always
     depends_on:
@@ -28,26 +28,11 @@ services:
       DB_NAME: backend_db
       JWT_SECRET: 61191133-6b0c-4725-b18d-d8f116cbdf4b
     ports:
-      - "3001:3001"
-    volumes:
-      - ./backend:/usr/src/app
-    command: >
-      sh -c "npm install && npm run build && npm run typeorm migration:run -- -d dist/config/typeorm.config.js && npm run start:dev"
-
-  frontend:
-    build: ./frontend
-    container_name: next_app
-    restart: always
-    depends_on:
-      - backend
-    environment:
-      - NEXT_PUBLIC_API_URL=http://backend:3001
-    ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/usr/src/app
+      - .:/usr/src/app
     command: >
-      sh -c "npm install && npm run dev"
+      sh -c "npm install && npm run build && npm run typeorm migration:run -- -d dist/config/typeorm.config.js && npm run start:dev"
 
 volumes:
   pg_data:
