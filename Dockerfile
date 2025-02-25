@@ -2,12 +2,10 @@ FROM node:lts
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-COPY tsconfig.json ./
-COPY src ./src
+COPY . . 
 
 RUN npm install
 
-RUN npm run build
+EXPOSE 3002
 
-CMD ["sh", "-c", "npm run typeorm migration:run -- -d dist/src/ormconfig.ts && npm run start:dev"]
+CMD ["npm", "run", "dev"]
